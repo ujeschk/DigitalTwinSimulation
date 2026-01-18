@@ -32,3 +32,14 @@ Components:
 ### Run
 ```bash
 docker compose up -d --build
+
+## IFC Model (Required for 3D Viewer)
+
+The IFC building model file is not stored in the Git repository due to size.
+
+To enable the 3D viewer:
+1. Download `model.ifc` from the **GitHub Releases (v1.0)** page
+2. Place it here: ifc-viewer/
+3. Reload the Viewer: http://localhost:3000
+
+
