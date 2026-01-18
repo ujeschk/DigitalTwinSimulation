@@ -1,0 +1,16 @@
+{
+  "brick": {
+    "room_uri": "http://example.com/building#Room1",
+    "sensor_uri": "http://example.com/building#virtual_temp_sensor_1",
+    "timeseries": "Room1_TempTS"
+  },
+  "bim": {
+    "storey_guid": "3UdjywU2L4v9tTcFw7B5hs",
+    "storey_name": "Floor 0"
+  },
+  "location_hint": {
+    "x": 12.3,
+    "y": 7.8,
+    "z": 0.0
+  }
+}

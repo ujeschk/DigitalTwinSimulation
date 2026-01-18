@@ -1,0 +1,15 @@
+@prefix brick: <https://brickschema.org/schema/Brick#> .
+@prefix bldg:  <http://example.com/building#> .
+@prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
+
+# Room definition
+bldg:Room1 a brick:Room ;
+    rdfs:label "Room1" .
+
+# Temperature sensor and its timeseries
+bldg:virtual_temp_sensor_1 a brick:Temperature_Sensor ;
+    brick:hasLocation bldg:Room1 ;
+    brick:hasTimeseries bldg:Room1_TempTS .
+
+bldg:Room1_TempTS a brick:Timeseries .
