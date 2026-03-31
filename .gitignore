@@ -15,8 +15,6 @@ nohup.out
 # Docker
 *.tar
 
-# IFC (large binary – provided separately)
-*.ifc
 
 # OS
 .DS_Store
