@@ -1,0 +1,22 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.venv/
+azure-iot-env/
+
+# Runtime artifacts
+data/*.db
+data/*.db-*
+nohup.out
+*.log
+
+# Docker
+*.tar
+
+# IFC (large binary – provided separately)
+*.ifc
+
+# OS
+.DS_Store

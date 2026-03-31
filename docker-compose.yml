@@ -1,0 +1,84 @@
+services:
+  graphdb:
+    image: ontotext/graphdb:10.8.10
+    container_name: dt_graphdb
+    ports:
+      - "7200:7200"
+    volumes:
+      - graphdb_data:/opt/graphdb/home
+    restart: unless-stopped
+
+  graphdb_init:
+    image: curlimages/curl:8.6.0
+    container_name: dt_graphdb_init
+    depends_on:
+      - graphdb
+    volumes:
+      - ./graphdb/brick-repo.ttl:/config/brick-repo.ttl:ro
+      - ./room.ttl:/data/room.ttl:ro
+    entrypoint: ["/bin/sh","-lc"]
+    command: >
+      '
+      echo "Waiting for GraphDB..." ;
+      until curl -fsS http://graphdb:7200/rest/repositories >/dev/null 2>&1; do sleep 2; done ;
+
+      echo "Creating repository brick (if missing)..." ;
+      curl -fsS -X POST -H "Content-Type: multipart/form-data" \
+        -F "config=@/config/brick-repo.ttl" \
+        http://graphdb:7200/rest/repositories || true ;
+
+      echo "Waiting for brick repository..." ;
+      until curl -fsS http://graphdb:7200/rest/repositories/brick >/dev/null 2>&1; do sleep 2; done ;
+
+      echo "Importing room.ttl into brick repository..." ;
+      curl -fsS -X POST \
+        -H "Content-Type: text/turtle" \
+        --data-binary "@/data/room.ttl" \
+        "http://graphdb:7200/repositories/brick/statements" ;
+
+      echo "Done." ;
+      '
+    restart: "no"
+
+  api:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.api
+    container_name: dt_api
+    environment:
+      - GRAPHDB_URL=http://graphdb:7200
+      - TELEMETRY_DB=/data/telemetry.db
+      - ANOMALY_DB=/data/anomalies.db
+    volumes:
+      - ./data:/data
+    depends_on:
+      - graphdb
+    ports:
+      - "5000:5000"
+    restart: unless-stopped
+
+  telemetry:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.telemetry
+    container_name: dt_telemetry
+    environment:
+      - GRAPHDB_URL=http://graphdb:7200
+      - DB_PATH=/data/telemetry.db
+    volumes:
+      - ./data:/data
+    depends_on:
+      - graphdb
+    restart: unless-stopped
+
+  viewer:
+    image: nginx:alpine
+    container_name: dt_viewer
+    ports:
+      - "3000:80"
+    volumes:
+      - ./ifc-viewer:/usr/share/nginx/html:ro
+    restart: unless-stopped
+
+volumes:
+  graphdb_data:

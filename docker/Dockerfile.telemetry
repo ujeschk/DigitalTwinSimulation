@@ -1,0 +1,15 @@
+FROM python:3.12-slim
+
+WORKDIR /app
+
+# curl needed for readiness check
+RUN apt-get update && apt-get install -y --no-install-recommends curl \
+  && rm -rf /var/lib/apt/lists/*
+
+COPY requirements.txt /app/requirements.txt
+RUN pip install --no-cache-dir -r /app/requirements.txt
+
+COPY send_telemetry_sparql_log_realistic.py /app/send_telemetry_sparql_log_realistic.py
+
+# Wait until GraphDB answers on the brick repository, then run telemetry
+CMD ["/bin/sh","-lc", "echo 'Waiting for GraphDB brick repo...' && until curl -fsS http://graphdb:7200/rest/repositories/brick >/dev/null 2>&1; do sleep 2; done && echo 'GraphDB ready.' && python /app/send_telemetry_sparql_log_realistic.py" ]

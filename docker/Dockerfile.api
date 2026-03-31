@@ -1,0 +1,19 @@
+FROM python:3.12-slim
+
+WORKDIR /app
+
+# System deps (kept minimal)
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    curl \
+  && rm -rf /var/lib/apt/lists/*
+
+COPY requirements.txt /app/requirements.txt
+RUN pip install --no-cache-dir -r /app/requirements.txt
+
+COPY dashboard/ /app/dashboard/
+
+# If your generator creates/starts the Flask API, we run it directly.
+# Expectation: it binds to 0.0.0.0:5000.
+EXPOSE 5000
+
+CMD ["python", "/app/dashboard/generate_flask_api.py"]
