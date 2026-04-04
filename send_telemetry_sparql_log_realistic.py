@@ -31,12 +31,12 @@ _prev_hum  = None
 
 # ==== Static config ====
 USE_SPARQL   = True
-BRICK_SPARQL = "http://127.0.0.1:7200/repositories/brick"  # GraphDB query endpoint
+BRICK_SPARQL = "http://graphdb:7200/repositories/brick"  # GraphDB query endpoint
 BRICK_USER   = ""   # leave empty if GraphDB allows anonymous read
 BRICK_PASS   = ""
 BRICK_BASE   = "http://example.com/building#"
 
-DB_PATH      = "/root/telemetry.db"
+DB_PATH      = "/data/telemetry.db"
 TABLE        = "telemetry"
 
 DEVICE_ID    = "virtual_temp_sensor_1"

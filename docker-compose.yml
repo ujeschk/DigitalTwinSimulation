@@ -51,6 +51,7 @@ services:
       - ANOMALY_DB=/data/anomalies.db
     volumes:
       - ./data:/data
+      - ./ifc-viewernew:/ifc
     depends_on:
       - graphdb
     ports:
@@ -77,7 +78,7 @@ services:
     ports:
       - "3000:80"
     volumes:
-      - ./ifc-viewer:/usr/share/nginx/html:ro
+      - ./ifc-viewernew:/usr/share/nginx/html:ro
     restart: unless-stopped
 
 volumes:

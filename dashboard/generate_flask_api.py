@@ -2,10 +2,11 @@ from flask import Flask, jsonify, request
 from flask_cors import CORS
 from functools import lru_cache
 import sqlite3, json
+import os
 
-TELEMETRY_DB = "/root/telemetry.db"
+TELEMETRY_DB = "/data/telemetry.db"
 ANOMALY_DB   = "/root/anomalies.db"
-DT_MODEL_PATH = "/root/ifc-viewernew/digital_twin_model.json"
+DT_MODEL_PATH = "/ifc/digital_twin_model.json"
 
 app = Flask(__name__)
 app.config["JSONIFY_PRETTYPRINT_REGULAR"] = False
@@ -20,10 +21,8 @@ def force_close(resp):
 # ---- Yardımcı: istek başına, read-only SQLite bağlantısı ----
 def ro_connect(db_path: str, timeout: int = 10) -> sqlite3.Connection:
     conn = sqlite3.connect(
-        f"file:{db_path}?mode=ro&cache=shared",
-        uri=True,
+        db_path,
         timeout=timeout,
-        isolation_level=None,         # autocommit
         check_same_thread=False,      # threaded server güvenliği
     )
     try:
@@ -43,7 +42,7 @@ def load_dt_model():
 @app.get("/api/health")
 def api_health():
     try:
-        conn = ro_connect(ANOMALY_DB)
+        conn = ro_connect(os.environ["TELEMETRY_DB"])
         conn.execute("SELECT 1;").fetchone()
         conn.close()
         return jsonify({"status": "ok"}), 200
