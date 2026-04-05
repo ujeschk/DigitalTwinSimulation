@@ -5,6 +5,8 @@ import argparse, os, sqlite3, joblib
 import pandas as pd
 from sklearn.ensemble import IsolationForest
 from pdm_features import make_features, infer_time_col
+import os
+os.makedirs("/data/models", exist_ok=True)
 
 def load_data(sqlite_path: str, table: str, train_days: int | None = None) -> pd.DataFrame:
     con = sqlite3.connect(f"file:{sqlite_path}?mode=ro", uri=True, timeout=10)

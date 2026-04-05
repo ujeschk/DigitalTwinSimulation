@@ -9,7 +9,7 @@ from datetime import datetime, timezone, timedelta
 
 from pdm_features import make_features
 
-ANOMALY_DB_PATH = "/root/anomalies.db"
+ANOMALY_DB_PATH = "/data/anomalies.db"
 
 
 def to_iso_z(ts_val) -> str:

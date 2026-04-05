@@ -81,5 +81,16 @@ services:
       - ./ifc-viewernew:/usr/share/nginx/html:ro
     restart: unless-stopped
 
+  pdm:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.pdm
+    container_name: dt_pdm
+    volumes:
+      - ./data:/data
+    depends_on:
+      - telemetry
+    restart: unless-stopped
+
 volumes:
   graphdb_data:

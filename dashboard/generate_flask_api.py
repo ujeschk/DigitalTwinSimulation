@@ -5,7 +5,7 @@ import sqlite3, json
 import os
 
 TELEMETRY_DB = "/data/telemetry.db"
-ANOMALY_DB   = "/root/anomalies.db"
+ANOMALY_DB   = "/data/anomalies.db"
 DT_MODEL_PATH = "/ifc/digital_twin_model.json"
 
 app = Flask(__name__)
